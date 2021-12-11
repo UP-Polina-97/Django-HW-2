@@ -1,4 +1,5 @@
 from django.shortcuts import render
+from django.http import HttpResponse
 
 DATA = {
     'omlet': {
@@ -21,14 +22,17 @@ DATA = {
 
 #def dish(request, name, serving):
 def dish(request, name):
-    context = DATA[name]
-    #for ing, col in context1:
-    #tryme = [col*serving for ing, col in DATA[f'{name}'].items()]
-    #trymeme = [ing for ing, col in DATA[f'{name}'].items()]
-    print(context)
-    return render(request, 'calculator/index.html', context)
-    #return HttpResponse(request, 'calculator/index.html', context[name])
-    #return HttpResponse(zip(trymeme, tryme))
+    serving = int(request.GET.get("serving", 1))
+    context = {
+    'recipe': DATA[name]}
+    for recipe, ing_am in context.items():
+        for ingredients, amount in ing_am.items():
+            context[recipe][ingredients]= DATA[name][ingredients] * serving
+            print(DATA[name][ingredients])
+        return render(request, 'calculator/index.html', context)
+
+    #return render(request, 'calculator/index.html', context)
+
 
 
 # Напишите ваш обработчик. Используйте DATA как источник данных
